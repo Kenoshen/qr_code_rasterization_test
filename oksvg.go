@@ -2,11 +2,11 @@ package main
 
 import (
 	"bytes"
+	"github.com/srwiley/oksvg"
 	"github.com/srwiley/rasterx"
 	"image"
 	"image/png"
 )
-import "github.com/srwiley/oksvg"
 
 type OkSVG struct {
 }

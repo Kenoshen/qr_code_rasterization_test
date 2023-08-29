@@ -1,1 +1,0 @@
-failed to run test: color string 00000000 is not length 3 or 6 as required by SVG specification

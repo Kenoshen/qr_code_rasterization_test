@@ -101,27 +101,14 @@ func main() {
 	log.Println("DONE")
 
 	// print out markdown
-	headers := []string{"name", "input", "expected"}
-	for k, _ := range svgTesters {
-		headers = append(headers, k)
-	}
-	fmt.Printf("| %s |\n", strings.Join(headers, " | "))
-	col := len(headers)
-	headers = []string{}
-	for i := 0; i < col; i++ {
-		headers = append(headers, "---")
-	}
-	fmt.Printf("| %s |\n", strings.Join(headers, " | "))
-
 	for _, fi := range files {
-		var row []string
-		row = append(row, fi.Name())
+		fmt.Printf("\n\n### %s\n", fi.Name())
 		baseFile := strings.TrimSuffix(fi.Name(), ".svg")
-		row = append(row, fmt.Sprintf("![img](%s)", filepath.Join("input", fi.Name())))
-		row = append(row, fmt.Sprintf("![img](%s)", filepath.Join("compare", baseFile+".png")))
+		fmt.Printf("`input`\n![img](%s)\n", filepath.Join("input", fi.Name()))
+		fmt.Printf("`expected output`\n![img](%s)\n", filepath.Join("compare", baseFile+".png"))
 		for testerName, _ := range svgTesters {
-			row = append(row, fmt.Sprintf("![%s](%s)", testerName, filepath.Join("output", baseFile+"_"+testerName+".png")))
+			fmt.Printf("`%s`\n", testerName)
+			fmt.Printf("![%s](%s)\n", testerName, filepath.Join("output", baseFile+"_"+testerName+".png"))
 		}
-		fmt.Printf("| %s |\n", strings.Join(row, " | "))
 	}
 }

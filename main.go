@@ -31,6 +31,7 @@ func main() {
 		"imagemagick": ImageMagick{},
 		"resvg":       ReSVG{},
 		"cons2p":      ConS2P{},
+		"chrome":      &Chrome{},
 	}
 
 	files, err := inputFS.ReadDir("input")

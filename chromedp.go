@@ -75,7 +75,7 @@ func (c *Chrome) Run(filename string, in []byte) ([]byte, error) {
 	imagedataURI := dataurl.New(in, "image/svg+xml").String()
 	body := fmt.Sprintf(`<html><body><img src="%s"></body></html>`, imagedataURI)
 	dataURI := dataurl.New([]byte(body), "text/html").String()
-	log.Printf("loading %s", dataURI)
+	log.Printf("loading %s...", dataURI[:30])
 	var buf []byte
 	if err := chromedp.Run(ctx,
 		chromedp.Navigate(dataURI),

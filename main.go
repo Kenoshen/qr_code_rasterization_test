@@ -2,6 +2,7 @@ package main
 
 import (
 	"embed"
+	"fmt"
 	"io"
 	"log"
 	"path/filepath"
@@ -95,4 +96,25 @@ func main() {
 
 	}
 	log.Println("DONE")
+
+	// print out markdown
+	headers := []string{"name", "input", "expected"}
+	for k, _ := range svgTesters {
+		headers = append(headers, k)
+	}
+	fmt.Println(strings.Join(headers, " | "))
+	sep := strings.Repeat("-", len(strings.Join(headers, " | ")))
+	fmt.Println(sep)
+	for _, fi := range files {
+		var row []string
+		row = append(row, fi.Name())
+		baseFile := strings.TrimSuffix(fi.Name(), ".svg")
+		row = append(row, fmt.Sprintf("![img](%s)", filepath.Join("input", fi.Name())))
+		row = append(row, fmt.Sprintf("![img](%s)", filepath.Join("compare", baseFile+".png")))
+		for testerName, _ := range svgTesters {
+			row = append(row, fmt.Sprintf("![%s](%s)", testerName, filepath.Join("output", baseFile+"_"+testerName+".png")))
+		}
+		fmt.Println(strings.Join(row, " | "))
+	}
+	fmt.Println(sep)
 }

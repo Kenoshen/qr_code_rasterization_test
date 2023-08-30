@@ -7,6 +7,7 @@ import (
 	"log"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 type SVGTester interface {
@@ -67,7 +68,9 @@ func main() {
 
 		for testerName, tester := range svgTesters {
 			log.Println(testerName)
+			start := time.Now()
 			result, err := tester.Run(fi.Name(), svgBytes)
+			took := time.Since(start)
 			if err != nil {
 				log.Printf("🚧 %s %s %s", fi.Name(), testerName, err)
 				err := SaveErr(testerName, fi.Name(), err)
@@ -83,9 +86,9 @@ func main() {
 				continue
 			}
 			if similar {
-				log.Printf("✅ %s %s", testerName, fi.Name())
+				log.Printf("✅ %s %s took:%s", testerName, fi.Name(), took)
 			} else {
-				log.Printf("❌ %s %s", testerName, fi.Name())
+				log.Printf("❌ %s %s took:%s", testerName, fi.Name(), took)
 			}
 
 			err = Save(testerName, fi.Name(), result)
@@ -102,9 +105,14 @@ func main() {
 	for k, _ := range svgTesters {
 		headers = append(headers, k)
 	}
-	fmt.Println(strings.Join(headers, " | "))
-	sep := strings.Repeat("-", len(strings.Join(headers, " | ")))
-	fmt.Println(sep)
+	fmt.Printf("| %s |\n", strings.Join(headers, " | "))
+	col := len(headers)
+	headers = []string{}
+	for i := 0; i < col; i++ {
+		headers = append(headers, "---")
+	}
+	fmt.Printf("| %s |\n", strings.Join(headers, " | "))
+
 	for _, fi := range files {
 		var row []string
 		row = append(row, fi.Name())
@@ -114,7 +122,6 @@ func main() {
 		for testerName, _ := range svgTesters {
 			row = append(row, fmt.Sprintf("![%s](%s)", testerName, filepath.Join("output", baseFile+"_"+testerName+".png")))
 		}
-		fmt.Println(strings.Join(row, " | "))
+		fmt.Printf("| %s |\n", strings.Join(row, " | "))
 	}
-	fmt.Println(sep)
 }

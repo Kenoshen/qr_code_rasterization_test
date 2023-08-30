@@ -19,9 +19,9 @@ Look in the `output/` folder to find the pngs created and compare them to the or
 
 
 ## comparison
-name | input | expected | cons2p | chrome | oksvg | imagemagick | resvg
------------------------------------------------------------------------
-frame.svg | ![img](input/frame.svg) | ![img](compare/frame.png) | ![oksvg](output/frame_oksvg.png) | ![imagemagick](output/frame_imagemagick.png) | ![resvg](output/frame_resvg.png) | ![cons2p](output/frame_cons2p.png) | ![chrome](output/frame_chrome.png)
-gradient.svg | ![img](input/gradient.svg) | ![img](compare/gradient.png) | ![chrome](output/gradient_chrome.png) | ![oksvg](output/gradient_oksvg.png) | ![imagemagick](output/gradient_imagemagick.png) | ![resvg](output/gradient_resvg.png) | ![cons2p](output/gradient_cons2p.png)
-text.svg | ![img](input/text.svg) | ![img](compare/text.png) | ![oksvg](output/text_oksvg.png) | ![imagemagick](output/text_imagemagick.png) | ![resvg](output/text_resvg.png) | ![cons2p](output/text_cons2p.png) | ![chrome](output/text_chrome.png)
------------------------------------------------------------------------
+
+| name | input | expected | oksvg | imagemagick | resvg | cons2p | chrome |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| frame.svg | ![img](input/frame.svg) | ![img](compare/frame.png) | ![oksvg](output/frame_oksvg.png) | ![imagemagick](output/frame_imagemagick.png) | ![resvg](output/frame_resvg.png) | ![cons2p](output/frame_cons2p.png) | ![chrome](output/frame_chrome.png) |
+| gradient.svg | ![img](input/gradient.svg) | ![img](compare/gradient.png) | ![chrome](output/gradient_chrome.png) | ![oksvg](output/gradient_oksvg.png) | ![imagemagick](output/gradient_imagemagick.png) | ![resvg](output/gradient_resvg.png) | ![cons2p](output/gradient_cons2p.png) |
+| text.svg | ![img](input/text.svg) | ![img](compare/text.png) | ![imagemagick](output/text_imagemagick.png) | ![resvg](output/text_resvg.png) | ![cons2p](output/text_cons2p.png) | ![chrome](output/text_chrome.png) | ![oksvg](output/text_oksvg.png) |

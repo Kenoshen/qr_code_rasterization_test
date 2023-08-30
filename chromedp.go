@@ -75,7 +75,7 @@ func (c *Chrome) Run(filename string, in []byte) ([]byte, error) {
 	imagedataURI := dataurl.New(in, "image/svg+xml").String()
 	body := fmt.Sprintf(`<html><body><img src="%s"></body></html>`, imagedataURI)
 	dataURI := dataurl.New([]byte(body), "text/html").String()
-	log.Printf("loading %s...", dataURI[:30])
+	log.Printf("loading %s...", dataURI[:50])
 	var buf []byte
 	if err := chromedp.Run(ctx,
 		chromedp.Navigate(dataURI),
@@ -83,8 +83,11 @@ func (c *Chrome) Run(filename string, in []byte) ([]byte, error) {
 	); err != nil {
 		return nil, err
 	}
-	log.Print("pausing....")
-	time.Sleep(time.Second * 5)
+
+	// if not using headless, you might want to pause to see the UI
+	// log.Print("pausing....")
+	// time.Sleep(time.Second * 5)
+
 	// log.Print("saving screenshot")
 	// if err := chromedp.Run(ctx,
 	// 	chromedp.FullScreenshot(&buf, 100),

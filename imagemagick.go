@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io"
+	"os"
 	"os/exec"
 )
 
@@ -11,11 +13,17 @@ type ImageMagick struct {
 }
 
 func (v ImageMagick) Run(inputFilename string, data []byte) ([]byte, error) {
-	cmd := exec.Command("convert", fmt.Sprintf("input/%s", inputFilename), fmt.Sprintf("output/%s_imagemagick.png", inputFilename[:len(inputFilename)-4]))
+	outputFilename := fmt.Sprintf("output/%s_imagemagick.png", inputFilename[:len(inputFilename)-4])
+	cmd := exec.Command("convert", fmt.Sprintf("input/%s", inputFilename), outputFilename)
 	err := cmd.Run()
 
 	if err != nil {
 		return nil, err
 	}
-	return nil, nil
+	f, err := os.Open(outputFilename)
+	if err != nil {
+		return nil, err
+	}
+	defer f.Close()
+	return io.ReadAll(f)
 }

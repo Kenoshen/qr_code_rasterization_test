@@ -28,18 +28,18 @@ Look in the `output/` folder to find the pngs created and compare them to the or
 ![img](compare/frame.png)
 
 `oksvg - 0.00s`
-![oksvg](output/frame_oksvg.png)
+❌`color string 00000000 is not length 3 or 6 as required by SVG specification`
 
-`imagemagick - 1.20s`
+`imagemagick - 1.22s`
 ![imagemagick](output/frame_imagemagick.png)
 
-`resvg - 0.25s`
+`resvg - 0.26s`
 ![resvg](output/frame_resvg.png)
 
-`cons2p - 1.38s`
+`cons2p - 1.64s`
 ![cons2p](output/frame_cons2p.png)
 
-`chrome - 0.95s`
+`chrome - 0.96s`
 ![chrome](output/frame_chrome.png)
 
 
@@ -51,20 +51,20 @@ Look in the `output/` folder to find the pngs created and compare them to the or
 `expected output`
 ![img](compare/gradient.png)
 
+`imagemagick - 1.55s`
+![imagemagick](output/gradient_imagemagick.png)
+
 `resvg - 0.05s`
 ![resvg](output/gradient_resvg.png)
 
 `cons2p - 1.49s`
 ![cons2p](output/gradient_cons2p.png)
 
-`chrome - 1.00s`
+`chrome - 0.95s`
 ![chrome](output/gradient_chrome.png)
 
 `oksvg - 0.30s`
 ![oksvg](output/gradient_oksvg.png)
-
-`imagemagick - 1.54s`
-![imagemagick](output/gradient_imagemagick.png)
 
 
 
@@ -75,17 +75,18 @@ Look in the `output/` folder to find the pngs created and compare them to the or
 `expected output`
 ![img](compare/text.png)
 
-`oksvg - 0.08s`
+`oksvg - 0.09s`
 ![oksvg](output/text_oksvg.png)
 
-`imagemagick - 1.31s`
+`imagemagick - 1.35s`
 ![imagemagick](output/text_imagemagick.png)
 
-`resvg - 0.25s`
+`resvg - 0.26s`
 ![resvg](output/text_resvg.png)
 
-`cons2p - 1.43s`
+`cons2p - 1.46s`
 ![cons2p](output/text_cons2p.png)
 
-`chrome - 0.82s`
+`chrome - 0.95s`
 ![chrome](output/text_chrome.png)
+

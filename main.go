@@ -1,12 +1,24 @@
 package main
 
 import (
+	"embed"
+	"fmt"
+	"io"
 	"log"
+	"path/filepath"
+	"strings"
+	"time"
 )
 
 type SVGTester interface {
-	Run(inputFilename string, data []byte) ([]byte, error)
+	Run(filename string, in []byte) ([]byte, error)
 }
+
+//go:embed input/*.svg
+var inputFS embed.FS
+
+//go:embed compare/*.png
+var compareFS embed.FS
 
 func main() {
 	err := ClearOutput()
@@ -21,33 +33,82 @@ func main() {
 		"imagemagick": ImageMagick{},
 		"resvg":       ReSVG{},
 		"cons2p":      ConS2P{},
+		"chrome":      &Chrome{},
 	}
 
-	input, err := ReadAll()
+	files, err := inputFS.ReadDir("input")
 	if err != nil {
 		log.Fatal(err)
 	}
+	for _, fi := range files {
+		inputfile := filepath.Join("input", fi.Name())
+		log.Printf("🌠 %s", inputfile)
+		f, err := inputFS.Open(inputfile)
+		if err != nil {
+			log.Fatal(err)
+		}
+		svgBytes, err := io.ReadAll(f)
+		if err != nil {
+			log.Fatal(err)
+		}
+		f.Close()
 
-	for fileName, data := range input {
+		// load comparison
+		expectFilename := filepath.Join("compare", strings.TrimSuffix(fi.Name(), ".svg")+".png")
+		f, err = compareFS.Open(expectFilename)
+		log.Println("file", expectFilename)
+		if err != nil {
+			log.Fatal(err)
+		}
+		comparePng, err := io.ReadAll(f)
+		if err != nil {
+			log.Fatal(err)
+		}
+		f.Close()
+
 		for testerName, tester := range svgTesters {
-			log.Println("RUN:", fileName, "for", testerName)
-			result, err := tester.Run(fileName, data)
+			log.Println(testerName)
+			start := time.Now()
+			result, err := tester.Run(fi.Name(), svgBytes)
+			took := time.Since(start)
 			if err != nil {
-				err := SaveErr(testerName, fileName, err)
+				log.Printf("🚧 %s %s %s", fi.Name(), testerName, err)
+				err := SaveErr(testerName, fi.Name(), err)
 				if err != nil {
 					log.Fatal(err)
 				}
+				continue
 			}
 
-			err = Save(testerName, fileName, result)
+			similar, err := Compare(result, comparePng)
+			if err != nil {
+				log.Printf("⚠️🤷‍♂️ %s %s %s", fi.Name(), testerName, err)
+				continue
+			}
+			if similar {
+				log.Printf("✅ %s %s took:%s", testerName, fi.Name(), took)
+			} else {
+				log.Printf("❌ %s %s took:%s", testerName, fi.Name(), took)
+			}
+
+			err = Save(testerName, fi.Name(), result)
 			if err != nil {
 				log.Fatal(err)
 			}
 		}
-	}
-	err = CopyOverComparisons()
-	if err != nil {
-		log.Fatal(err)
+
 	}
 	log.Println("DONE")
+
+	// print out markdown
+	for _, fi := range files {
+		fmt.Printf("\n\n### %s\n", fi.Name())
+		baseFile := strings.TrimSuffix(fi.Name(), ".svg")
+		fmt.Printf("`input`\n![img](%s)\n", filepath.Join("input", fi.Name()))
+		fmt.Printf("`expected output`\n![img](%s)\n", filepath.Join("compare", baseFile+".png"))
+		for testerName, _ := range svgTesters {
+			fmt.Printf("`%s`\n", testerName)
+			fmt.Printf("![%s](%s)\n", testerName, filepath.Join("output", baseFile+"_"+testerName+".png"))
+		}
+	}
 }

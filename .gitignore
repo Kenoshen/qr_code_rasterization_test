@@ -1,3 +1,4 @@
 rasterization
+output/*_error.txt
 .DS_Store
 .idea

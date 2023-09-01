@@ -118,7 +118,11 @@ func main() {
 		fmt.Printf("`expected output`\n![img](%s)\n\n", filepath.Join("compare", baseFile+".png"))
 		for _, t := range r.testers {
 			fmt.Printf("`%s - %.2fs`\n", t.testerName, t.took.Seconds())
-			fmt.Printf("![%s](%s)\n\n", t.testerName, filepath.Join("output", baseFile+"_"+t.testerName+".png"))
+			if t.errorMessage == "" {
+				fmt.Printf("![%s](%s)\n\n", t.testerName, filepath.Join("output", baseFile+"_"+t.testerName+".png"))
+			} else {
+				fmt.Printf("❌`%s`\n\n", t.errorMessage)
+			}
 		}
 	}
 

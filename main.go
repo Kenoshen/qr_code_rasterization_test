@@ -40,8 +40,12 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	var results []*Result
 	for _, fi := range files {
-		inputfile := filepath.Join("input", fi.Name())
+		inputName := fi.Name()
+		r := &Result{inputName: inputName}
+		results = append(results, r)
+		inputfile := filepath.Join("input", inputName)
 		log.Printf("🌠 %s", inputfile)
 		f, err := inputFS.Open(inputfile)
 		if err != nil {
@@ -71,7 +75,13 @@ func main() {
 			start := time.Now()
 			result, err := tester.Run(fi.Name(), svgBytes)
 			took := time.Since(start)
+			t := &Tester{
+				testerName: testerName,
+				took:       took,
+			}
+			r.testers = append(r.testers, t)
 			if err != nil {
+				t.errorMessage = err.Error()
 				log.Printf("🚧 %s %s %s", fi.Name(), testerName, err)
 				err := SaveErr(testerName, fi.Name(), err)
 				if err != nil {
@@ -101,14 +111,30 @@ func main() {
 	log.Println("DONE")
 
 	// print out markdown
-	for _, fi := range files {
-		fmt.Printf("\n\n### %s\n", fi.Name())
-		baseFile := strings.TrimSuffix(fi.Name(), ".svg")
-		fmt.Printf("`input`\n![img](%s)\n", filepath.Join("input", fi.Name()))
-		fmt.Printf("`expected output`\n![img](%s)\n", filepath.Join("compare", baseFile+".png"))
-		for testerName, _ := range svgTesters {
-			fmt.Printf("`%s`\n", testerName)
-			fmt.Printf("![%s](%s)\n", testerName, filepath.Join("output", baseFile+"_"+testerName+".png"))
+	for _, r := range results {
+		fmt.Printf("\n\n### %s\n", r.inputName)
+		baseFile := strings.TrimSuffix(r.inputName, ".svg")
+		fmt.Printf("`input`\n![img](%s)\n\n", filepath.Join("input", r.inputName))
+		fmt.Printf("`expected output`\n![img](%s)\n\n", filepath.Join("compare", baseFile+".png"))
+		for _, t := range r.testers {
+			fmt.Printf("`%s - %.2fs`\n", t.testerName, t.took.Seconds())
+			fmt.Printf("![%s](%s)\n\n", t.testerName, filepath.Join("output", baseFile+"_"+t.testerName+".png"))
 		}
 	}
+
+	err = CopyOverComparisons()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+type Result struct {
+	inputName string
+	testers   []*Tester
+}
+
+type Tester struct {
+	testerName   string
+	took         time.Duration
+	errorMessage string
 }

@@ -20,53 +20,72 @@ Look in the `output/` folder to find the pngs created and compare them to the or
 
 ## comparison
 
-
 ### frame.svg
 `input`
 ![img](input/frame.svg)
+
 `expected output`
 ![img](compare/frame.png)
-`oksvg`
+
+`oksvg - 0.00s`
 ![oksvg](output/frame_oksvg.png)
-`imagemagick`
+
+`imagemagick - 1.20s`
 ![imagemagick](output/frame_imagemagick.png)
-`resvg`
+
+`resvg - 0.25s`
 ![resvg](output/frame_resvg.png)
-`cons2p`
+
+`cons2p - 1.38s`
 ![cons2p](output/frame_cons2p.png)
-`chrome`
+
+`chrome - 0.95s`
 ![chrome](output/frame_chrome.png)
+
 
 
 ### gradient.svg
 `input`
 ![img](input/gradient.svg)
+
 `expected output`
 ![img](compare/gradient.png)
-`resvg`
+
+`resvg - 0.05s`
 ![resvg](output/gradient_resvg.png)
-`cons2p`
+
+`cons2p - 1.49s`
 ![cons2p](output/gradient_cons2p.png)
-`chrome`
+
+`chrome - 1.00s`
 ![chrome](output/gradient_chrome.png)
-`oksvg`
+
+`oksvg - 0.30s`
 ![oksvg](output/gradient_oksvg.png)
-`imagemagick`
+
+`imagemagick - 1.54s`
 ![imagemagick](output/gradient_imagemagick.png)
+
 
 
 ### text.svg
 `input`
 ![img](input/text.svg)
+
 `expected output`
 ![img](compare/text.png)
-`imagemagick`
-![imagemagick](output/text_imagemagick.png)
-`resvg`
-![resvg](output/text_resvg.png)
-`cons2p`
-![cons2p](output/text_cons2p.png)
-`chrome`
-![chrome](output/text_chrome.png)
-`oksvg`
+
+`oksvg - 0.08s`
 ![oksvg](output/text_oksvg.png)
+
+`imagemagick - 1.31s`
+![imagemagick](output/text_imagemagick.png)
+
+`resvg - 0.25s`
+![resvg](output/text_resvg.png)
+
+`cons2p - 1.43s`
+![cons2p](output/text_cons2p.png)
+
+`chrome - 0.82s`
+![chrome](output/text_chrome.png)

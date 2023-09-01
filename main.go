@@ -27,13 +27,13 @@ func main() {
 	}
 
 	svgTesters := map[string]SVGTester{
-		"oksvg": OkSVG{},
-		//"v8":          V8{},
-		//"webview":     Webview{},
+		"oksvg":       OkSVG{},
 		"imagemagick": ImageMagick{},
 		"resvg":       ReSVG{},
 		"cons2p":      ConS2P{},
 		"chrome":      &Chrome{},
+		//"v8":          V8{},
+		//"webview":     Webview{},
 	}
 
 	files, err := inputFS.ReadDir("input")

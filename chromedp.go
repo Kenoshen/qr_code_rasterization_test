@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/chromedp/cdproto/cdp"
+	"github.com/chromedp/cdproto/emulation"
 	"log"
 	"os"
 	"sync"
@@ -59,6 +61,7 @@ func (c *Chrome) Run(filename string, in []byte) ([]byte, error) {
 	// set a parent timeout so we bound our total time in case something hangs
 	tctx, cancel := context.WithTimeout(c.ctx, time.Minute)
 	defer cancel()
+
 	ctx, cancel := chromedp.NewContext(tctx)
 
 	defer func() {
@@ -79,21 +82,16 @@ func (c *Chrome) Run(filename string, in []byte) ([]byte, error) {
 	var buf []byte
 	if err := chromedp.Run(ctx,
 		chromedp.Navigate(dataURI),
-		chromedp.Screenshot("img", &buf, chromedp.NodeVisible),
+		chromedp.ActionFunc(func(ctx context.Context) error {
+			err := emulation.SetDefaultBackgroundColorOverride().WithColor(&cdp.RGBA{0, 0, 0, 0}).Do(ctx)
+			if err != nil {
+				return err
+			}
+			return chromedp.Screenshot("img", &buf, chromedp.NodeVisible).Do(ctx)
+		}),
 	); err != nil {
 		return nil, err
 	}
-
-	// if not using headless, you might want to pause to see the UI
-	// log.Print("pausing....")
-	// time.Sleep(time.Second * 5)
-
-	// log.Print("saving screenshot")
-	// if err := chromedp.Run(ctx,
-	// 	chromedp.FullScreenshot(&buf, 100),
-	// ); err != nil {
-	// 	return nil, err
-	// }
 	log.Printf("done")
 	return buf, nil
 }

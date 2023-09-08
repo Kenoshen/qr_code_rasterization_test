@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"github.com/srwiley/oksvg"
 	"github.com/srwiley/rasterx"
 	"image"
@@ -9,6 +10,7 @@ import (
 )
 
 type OkSVG struct {
+	width int
 }
 
 func (v OkSVG) Run(inputFilename string, data []byte) ([]byte, error) {
@@ -17,11 +19,19 @@ func (v OkSVG) Run(inputFilename string, data []byte) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	w := int(icon.ViewBox.W)
-	h := int(icon.ViewBox.H)
-	icon.SetTarget(0, 0, float64(w), float64(h))
-	rgba := image.NewRGBA(image.Rect(0, 0, w, h))
-	icon.Draw(rasterx.NewDasher(w, h, rasterx.NewScannerGV(w, h, rgba, rgba.Bounds())), 1)
+	w := icon.ViewBox.W
+	h := icon.ViewBox.H
+	if w <= 0 || h <= 0 {
+		return nil, fmt.Errorf("parsed svg resulted in a viewBox with 0 width or height")
+	}
+	ratio := h / w
+
+	width := v.width
+	height := int(float64(width) * ratio)
+
+	icon.SetTarget(0, 0, float64(width), float64(height))
+	rgba := image.NewRGBA(image.Rect(0, 0, width, height))
+	icon.Draw(rasterx.NewDasher(width, height, rasterx.NewScannerGV(width, height, rgba, rgba.Bounds())), 1)
 
 	wBuf := bytes.NewBuffer(nil)
 	err = png.Encode(wBuf, rgba)

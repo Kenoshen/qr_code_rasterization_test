@@ -27,7 +27,7 @@ func main() {
 	}
 
 	svgTesters := map[string]SVGTester{
-		"oksvg":       OkSVG{},
+		"oksvg":       OkSVG{width: 768},
 		"imagemagick": ImageMagick{},
 		"resvg":       ReSVG{},
 		"cons2p":      ConS2P{},
